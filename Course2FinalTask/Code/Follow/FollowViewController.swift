@@ -9,35 +9,28 @@
 import UIKit
 import DataProvider
 
-class FollowViewController: UITableViewController {
+final class FollowViewController: UITableViewController {
     
-    var user: [User]?
-    var userId: User.Identifier!
-    var navigationItemTitle: String?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    public var users: [User]?
+    public var navigationItemTitle: String?
     
     override func viewWillAppear(_ animated: Bool) {
-        if let _navigationItemTitle = navigationItemTitle {
-            self.navigationItem.title = _navigationItemTitle
+        if let navigationItemTitleForFollowVC = navigationItemTitle {
+            self.navigationItem.title = navigationItemTitleForFollowVC
         }
     }
-
-// MARK: UITableViewDataSource
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+    
+    // MARK: UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return user?.count ?? 0
+        return users?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "followCell", for: indexPath) as! FollowCell
-        if let currentUser = user?[indexPath.row] {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "followCell", for: indexPath) as? FollowCell
+            else { return UITableViewCell() }
+        
+        if let currentUser = users?[indexPath.row] {
             cell.userAvatar.image = currentUser.avatar
             cell.userName.text = currentUser.fullName
         }
@@ -45,11 +38,11 @@ class FollowViewController: UITableViewController {
         
         return cell
     }
-
-// MARK: - Functions
+    
+    // MARK: - Functions
     
     func showProfile(cell: FollowCell) {
-        if let currentUserCell = currentUserCell(cell: cell)   {
+        if let currentUserCell = currentUserCell(cell: cell) {
             if let userProfile = DataProviders.shared.usersDataProvider.user(with: currentUserCell.id) {
                 
                 if let profile = storyboard?.instantiateViewController(withIdentifier:
@@ -61,9 +54,10 @@ class FollowViewController: UITableViewController {
         }
     }
     
-    func currentUserCell(cell: FollowCell) -> User? {
+   private func currentUserCell(cell: FollowCell) -> User? {
         if let indexPath = tableView.indexPath(for: cell) {
-            if let currentUsers = user { return currentUsers[indexPath.row]}
+            
+            if let currentUsers = users { return currentUsers[indexPath.row]}
         }
         return nil
     }

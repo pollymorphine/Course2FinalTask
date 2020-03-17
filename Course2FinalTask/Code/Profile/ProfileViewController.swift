@@ -10,76 +10,62 @@ import UIKit
 import DataProvider
 
 
-class  ProfileViewController: UICollectionViewController  {
+final class  ProfileViewController: UICollectionViewController  {
     
-    var currentUser: User!
-    var post: [Post]?
+    public var currentUser = DataProviders.shared.usersDataProvider.currentUser()
+    public var posts: [Post]?
     
     private let reuseIdentifier = "profileCell"
     private let reuseHeaderIdentifier = "ProfileReusableView"
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: layout)
-        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        
-        if currentUser == nil { currentUser = DataProviders.shared.usersDataProvider.currentUser() }
-        
-        post = DataProviders.shared.postsDataProvider.findPosts(by: currentUser.id)
-        
+        posts = DataProviders.shared.postsDataProvider.findPosts(by: currentUser.id)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.title = currentUser.username
     }
- }
+}
 
 // MARK: UICollectionViewDataSource
 
- extension ProfileViewController  {
+extension ProfileViewController  {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return post?.count ?? 0
+        return posts?.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? ProfileCell
+            else { return UICollectionViewCell() }
         
-        let currentPost = post?[indexPath.row]
+        let currentPost = posts?[indexPath.row]
         cell.profileImage.image = currentPost?.image
         
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader {
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseHeaderIdentifier, for: indexPath) as! ProfileReusableView
-            
-            headerView.profileAvatar.image = currentUser.avatar
-            headerView.userName.text = currentUser.fullName
-            headerView.followersLabel.text = "Followers: \(currentUser.followedByCount)"
-            headerView.followingLabel.text = "Following: \(currentUser.followsCount)"
-            headerView.delegate = self
-            
-            return headerView
-            
-        } else {
-            assert(false)
-        }
+        let kind = UICollectionView.elementKindSectionHeader
+        
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseHeaderIdentifier, for: indexPath) as? ProfileReusableView
+            else { return UICollectionReusableView() }
+        
+        headerView.configure(with: currentUser)
+        headerView.delegate = self
+        
+        return headerView
     }
     
-// MARK: Functions
+    // MARK: Functions
     
     func showFollowers() {
         if  let followers = DataProviders.shared.usersDataProvider.usersFollowingUser(with: currentUser.id) {
             
             if let follow = storyboard?.instantiateViewController(withIdentifier: "followViewController") as? FollowViewController {
-                follow.user  = followers
+                follow.users  = followers
                 navigationController?.pushViewController(follow, animated: true)
                 follow.navigationItemTitle = "Followers"
             }
@@ -90,7 +76,7 @@ class  ProfileViewController: UICollectionViewController  {
         if  let followers = DataProviders.shared.usersDataProvider.usersFollowedByUser(with: currentUser.id) {
             
             if let follow = storyboard?.instantiateViewController(withIdentifier: "followViewController") as? FollowViewController {
-                follow.user  = followers
+                follow.users  = followers
                 navigationController?.pushViewController(follow, animated: true)
                 self.navigationItem.title = currentUser.username
                 follow.navigationItemTitle = "Following"
@@ -98,7 +84,6 @@ class  ProfileViewController: UICollectionViewController  {
         }
     }
 }
-
 
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     

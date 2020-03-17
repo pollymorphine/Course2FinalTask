@@ -10,7 +10,7 @@ import UIKit
 import DataProvider
 
 
-class FollowCell: UITableViewCell {
+final class FollowCell: UITableViewCell {
     
     weak var delegate: FollowViewController?
     
@@ -19,9 +19,6 @@ class FollowCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        userAvatar.isUserInteractionEnabled = true
-        userName.isUserInteractionEnabled = true
         
         addTapGestureRecognizer()
     }

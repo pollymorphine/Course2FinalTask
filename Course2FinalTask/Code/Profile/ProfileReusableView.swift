@@ -9,28 +9,29 @@
 import UIKit
 import  DataProvider
 
-class ProfileReusableView: UICollectionReusableView {
-    @IBOutlet weak var profileAvatar: UIImageView!
-    @IBOutlet weak var userName: UILabel!
-    @IBOutlet weak var followersLabel: UILabel!
-    @IBOutlet weak var followingLabel: UILabel!
+final class ProfileReusableView: UICollectionReusableView {
+  
+    @IBOutlet private var profileAvatar: UIImageView!
+    @IBOutlet private var userName: UILabel!
+    @IBOutlet private var followersLabel: UILabel!
+    @IBOutlet private var followingLabel: UILabel!
     
     weak var delegate: ProfileViewController?
-    
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        profileAvatar.isUserInteractionEnabled = true
-        userName.isUserInteractionEnabled = true
-        followersLabel.isUserInteractionEnabled = true
-        followingLabel.isUserInteractionEnabled = true
-        
         profileAvatar.layer.cornerRadius = profileAvatar.frame.width / 2
         profileAvatar.clipsToBounds = true
         
-        addTapGestureRecognizer()
-        
+        addTapsGestureRecognizer()
+    }
+    
+    func configure(with currentUser: User) {
+        profileAvatar.image = currentUser.avatar
+        userName.text = currentUser.fullName
+        followersLabel.text = "Followers: \(currentUser.followedByCount)"
+        followingLabel.text = "Following: \(currentUser.followsCount)"
     }
     
     @objc func tapToWatchFollowers() {
@@ -41,7 +42,7 @@ class ProfileReusableView: UICollectionReusableView {
         delegate?.showFollowing()
     }
     
-    func addTapGestureRecognizer() {
+    func addTapsGestureRecognizer() {
         let tapFollowersLabel = UITapGestureRecognizer(target: self, action: #selector(tapToWatchFollowers))
         followersLabel.addGestureRecognizer(tapFollowersLabel)
         

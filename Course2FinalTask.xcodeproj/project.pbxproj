@@ -69,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				CEE893E223FBF44B00C83B6E /* Default-568h@2x.png */,
+				CEF0CD8123F8981000664188 /* Main.storyboard */,
 				74B79256202B3254006BCB41 /* Course2FinalTask */,
 				7484B05320441FD000BDE1A6 /* DataProvider.framework */,
 				74B79255202B3254006BCB41 /* Products */,
@@ -86,14 +87,6 @@
 		74B79256202B3254006BCB41 /* Course2FinalTask */ = {
 			isa = PBXGroup;
 			children = (
-				CEE893E423FBF4BD00C83B6E /* ProfileViewController.swift */,
-				CEE893E623FBF4D000C83B6E /* FeedViewController.swift */,
-				CE6651F923FF0F84000706C6 /* FeedCell.swift */,
-				CE6651FB2402DA28000706C6 /* ProfileReusableView.swift */,
-				CE6651FD2402DA81000706C6 /* ProfileCell.swift */,
-				CED24394240543C9004DCADA /* FollowCell.swift */,
-				CEE893E823FBF7E100C83B6E /* FollowViewController.swift */,
-				CEF0CD8123F8981000664188 /* Main.storyboard */,
 				74B7927B202B3427006BCB41 /* Code */,
 				74B7927C202B342E006BCB41 /* Resources */,
 				74B7927D202B3434006BCB41 /* Supporting Files */,
@@ -104,6 +97,9 @@
 		74B7927B202B3427006BCB41 /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				CE6B9F812421495F00E7DE31 /* Feed */,
+				CE6B9F802421493900E7DE31 /* Profile */,
+				CE6B9F822421497A00E7DE31 /* Follow */,
 				74B79257202B3254006BCB41 /* AppDelegate.swift */,
 			);
 			path = Code;
@@ -123,6 +119,34 @@
 				74B79263202B3254006BCB41 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CE6B9F802421493900E7DE31 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				CE6651FB2402DA28000706C6 /* ProfileReusableView.swift */,
+				CE6651FD2402DA81000706C6 /* ProfileCell.swift */,
+				CEE893E423FBF4BD00C83B6E /* ProfileViewController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		CE6B9F812421495F00E7DE31 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				CEE893E623FBF4D000C83B6E /* FeedViewController.swift */,
+				CE6651F923FF0F84000706C6 /* FeedCell.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		CE6B9F822421497A00E7DE31 /* Follow */ = {
+			isa = PBXGroup;
+			children = (
+				CEE893E823FBF7E100C83B6E /* FollowViewController.swift */,
+				CED24394240543C9004DCADA /* FollowCell.swift */,
+			);
+			path = Follow;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

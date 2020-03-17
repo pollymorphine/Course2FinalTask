@@ -9,38 +9,48 @@
 import UIKit
 import DataProvider
 
-class FeedCell: UITableViewCell {
+final class FeedCell: UITableViewCell {
     
-    @IBOutlet weak var userAvatar: UIImageView!
-    @IBOutlet weak var userName: UILabel!
-    @IBOutlet weak var postDate: UILabel!
-    @IBOutlet weak var postImage: UIImageView!
-    @IBOutlet weak var bigLikeImage: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
-    @IBOutlet weak var likesCount: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    
+    @IBOutlet private var userAvatar: UIImageView!
+    @IBOutlet private var userName: UILabel!
+    @IBOutlet private var postDate: UILabel!
+    @IBOutlet private var postImage: UIImageView!
+    @IBOutlet private var bigLikeImage: UIImageView!
+    @IBOutlet private var likesCount: UILabel!
+    @IBOutlet private var descriptionLabel: UILabel!
+    @IBOutlet private var stackView: UIStackView!
+   
     weak var delegate: FeedViewController?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        userAvatar.isUserInteractionEnabled = true
-        userName.isUserInteractionEnabled = true
-        postDate.isUserInteractionEnabled = true
-        likesCount.isUserInteractionEnabled = true
-        bigLikeImage.isUserInteractionEnabled = true
-        postImage.isUserInteractionEnabled = true
-        
-        
-        addTapGestureRecognizer()
-        userAvatar.addGestureRecognizer(addTapGestureRecognizerForUser())
-        userName.addGestureRecognizer(addTapGestureRecognizerForUser())
-        postDate.addGestureRecognizer(addTapGestureRecognizerForUser())
+        registerTapGestureRecognizers()
+        stackView.addGestureRecognizer(addTapGestureRecognizerForUser())
         
         bigLikeImage.alpha = 0.0
     }
     
+        func configure(with post: Post) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "'Today at' hh:mm:ss a"
+            let dateString = dateFormatter.string(from: post.createdTime)
+            
+            userAvatar.image = post.authorAvatar
+            postDate.text = dateString
+            userName.text = post.authorUsername
+            postImage.image = post.image
+            likesCount.text = "Likes: \(post.likedByCount)"
+            descriptionLabel.text  = post.description
+            
+            if post.currentUserLikesThisPost {
+                likeButton.tintColor = .blue
+            } else {
+                likeButton.tintColor = .lightGray
+            }
+      }
+        
     @IBAction func tapLikeButton(_ sender: UIButton) {
         delegate?.tapLikePostButton(cell: self)
     }
@@ -67,7 +77,7 @@ class FeedCell: UITableViewCell {
         delegate?.showWhoLiked(cell: self)
     }
     
-    func addTapGestureRecognizer() {
+    func registerTapGestureRecognizers() {
         let tapLikesCountLable = UITapGestureRecognizer(target: self, action: #selector(tapToWatchWhoLiked))
         likesCount.addGestureRecognizer(tapLikesCountLable)
         
